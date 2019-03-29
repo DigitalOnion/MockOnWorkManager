@@ -31,4 +31,10 @@ dependencies {
     def work_version = '2.0.0'
     implementation "androidx.work:work-runtime:$work_version"
     androidTestImplementation "androidx.work:work-testing:$work_version"
+
+    implementation 'com.google.dagger:dagger:2.21'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
+    //implementation 'com.google.dagger:dagger-android:2.15'
+    //implementation 'com.google.dagger:dagger-android-support:2.0' // this is clashing
+    //annotationProcessor 'com.google.dagger:dagger-android-processor:2.0'
 }
