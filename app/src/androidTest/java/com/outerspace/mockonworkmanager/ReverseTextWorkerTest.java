@@ -61,6 +61,6 @@ public class ReverseTextWorkerTest {
         String output = dataOutput.getString(MainActivity.OUTPUT_TEXT);
 
         assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
-        assertThat(output, is("ZYXWVUTSRQPOMNLKJIGFEDCBA"));
+        assertThat(output, is("ZYXWVUTSRQPONMLKJIHGFEDCBA"));
     }
 }

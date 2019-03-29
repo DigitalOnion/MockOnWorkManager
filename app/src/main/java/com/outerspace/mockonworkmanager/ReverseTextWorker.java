@@ -9,6 +9,8 @@ import androidx.work.WorkerParameters;
 
 public class ReverseTextWorker extends Worker {
 
+    TextReverser reverser = TextReverser.getInstance();  // dependency inside a worker
+
     public ReverseTextWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams) {
@@ -20,7 +22,7 @@ public class ReverseTextWorker extends Worker {
     public Result doWork() {
         String inputText = getInputData().getString(MainActivity.INPUT_TEXT);
 
-        String reverseText = TextReverser.reverse(inputText); // dependency inside a worker
+        String reverseText = reverser.reverse(inputText);
 
         Data reverseData = new Data.Builder()
                 .putString(MainActivity.OUTPUT_TEXT, reverseText)

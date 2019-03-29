@@ -3,7 +3,15 @@ package com.outerspace.mockonworkmanager;
 import androidx.annotation.Nullable;
 
 public class TextReverser {
-    public static String reverse(@Nullable String s) {
+    private static final TextReverser instance = new TextReverser();
+
+    private TextReverser() { }
+
+    public static TextReverser getInstance() {
+        return instance;
+    }
+
+    public String reverse(@Nullable String s) {
         if(s != null) {
             char[] a = s.toCharArray();
             int i = 0;
