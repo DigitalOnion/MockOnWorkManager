@@ -1,4 +1,6 @@
-package com.outerspace.mockonworkmanager;
+package com.outerspace.mockonworkmanager.di;
+
+import com.outerspace.mockonworkmanager.TextReverser;
 
 import javax.inject.Singleton;
 

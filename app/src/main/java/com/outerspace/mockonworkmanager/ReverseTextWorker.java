@@ -2,6 +2,9 @@ package com.outerspace.mockonworkmanager;
 
 import android.content.Context;
 
+import com.outerspace.mockonworkmanager.di.DaggerReverseTextComponent;
+import com.outerspace.mockonworkmanager.di.ReverseTextComponent;
+
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
@@ -11,20 +14,21 @@ import androidx.work.WorkerParameters;
 
 public class ReverseTextWorker extends Worker {
 
-    @Inject TextReverser reverser; // = TextReverser.getInstance();  // dependency inside a worker
+    @Inject
+    TextReverser reverser; // = TextReverser.getInstance();  // dependency inside a worker
 
     public ReverseTextWorker(
             @NonNull Context context,
             @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
-        TextReverseComponent component = DaggerTextReverseComponent.create();
-        component.inject(this);
+        ReverseTextComponent component = DaggerReverseTextComponent.create();
+            component.inject(this);
     }
 
     @NonNull
     @Override
-    public Result doWork() {
+    public Result doWork()  {
         String inputText = getInputData().getString(MainActivity.INPUT_TEXT);
 
         String reverseText = reverser.reverse(inputText);
