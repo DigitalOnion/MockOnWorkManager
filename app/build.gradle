@@ -18,6 +18,7 @@ android {
     }
 }
 
+// Taken from: https://stackoverflow.com/questions/36231457/dagger-not-generating-components-for-test-class
 android.applicationVariants.all { variant ->
     if (variant.buildType.name == "debug") {
         def aptOutputDir = new File(buildDir, "generated/source/apt/${variant.unitTestVariant.dirName}")

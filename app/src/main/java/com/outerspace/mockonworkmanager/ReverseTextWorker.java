@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.outerspace.mockonworkmanager.di.DaggerReverseTextComponent;
 import com.outerspace.mockonworkmanager.di.ReverseTextComponent;
+import com.outerspace.mockonworkmanager.di.ReverseTextModule;
 
 import javax.inject.Inject;
 
@@ -22,8 +23,15 @@ public class ReverseTextWorker extends Worker {
             @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
-        ReverseTextComponent component = DaggerReverseTextComponent.create();
-            component.inject(this);
+        init();
+    }
+
+    protected void init() {
+        ReverseTextComponent component =
+                DaggerReverseTextComponent.builder()
+                        .reverseTextModule(new ReverseTextModule())
+                        .build();
+        component.inject(this);
     }
 
     @NonNull

@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class TestReverseTextWorker {
+public class TestReverseTextWorkerForTest {
 
     @Inject
     TextReverser reverser;
@@ -53,10 +53,10 @@ public class TestReverseTextWorker {
     public void testReverseTextWorker() throws Exception {
 
         Data dataText = new Data.Builder()
-                .putString(MainActivity.INPUT_TEXT, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+                .putString(MainActivity.INPUT_TEXT, "abcdefghijklmnopqrstuvwxyz")
                 .build();
 
-        OneTimeWorkRequest reverseTextWorkRequest = new OneTimeWorkRequest.Builder(ReverseTextWorker.class)
+        OneTimeWorkRequest reverseTextWorkRequest = new OneTimeWorkRequest.Builder(ReverseTextWorkerForTest.class)
                 .setInputData(dataText)
                 .build();
 

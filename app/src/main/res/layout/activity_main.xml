@@ -55,6 +55,16 @@
         app:layout_constraintLeft_toRightOf="@id/vleft_guide"
         app:layout_constraintRight_toLeftOf="@id/vright_guide"/>
 
-
+    <WebView
+        android:id="@+id/intro"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/vleft_guide"
+        app:layout_constraintRight_toLeftOf="@id/vright_guide"
+        app:layout_constraintTop_toBottomOf="@id/output_text"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
