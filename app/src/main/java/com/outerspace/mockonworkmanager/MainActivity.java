@@ -34,9 +34,8 @@ public class MainActivity extends AppCompatActivity implements MyTextChangedList
 
         inputText.addTextChangedListener(listener);
 
-        String html = getString(R.string.html_intro);
         WebView webIntro = findViewById(R.id.intro);
-        webIntro.loadData(html, "text/html", null);
+        webIntro.loadUrl("file:///android_asset/intro.html");
     }
 
     @Override

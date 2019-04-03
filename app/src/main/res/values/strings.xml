@@ -3,5 +3,4 @@
 
     <string name="input_message">Type something</string>
     <string name="nothing_yet">Nothing yet</string>
-    <string name="html_intro">#Mock On WorkManager\nThis sample app shows how to create a test case for a Worker object injecting a fake dependency.\nThe app is a very simple type and reverse app. Though, for the purpose of the exercise, it uses a TextReverser to act as a text reverse server.\nI use a Worker to schedule a WorkManager task to call the text reverse server, and I inject the TextReverser object into the Worker task.\nThe challenge is to create a test case which will inject a Fake Text Reverse Server.\nIt works, check it out.\n\nAny questions?/nAsk Luis.</string>
 </resources>
