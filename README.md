@@ -1,7 +1,7 @@
 # MockOnWorkManager
 Sample app to do Test Cases by injecting a fake (or a mock) dependency on an Android Worker  
 
-# Description
+## Description
 MockOnWorkManager is a sample app with a technique I put together when I needed to develop an app which uses WorkManager. 
 
 The way WorkManager works is by defining a Worker class and instructing WorkManager to create objects of that class based on certain conditions. WorkManager creates the objects and initialize them with parameters that we pass.
@@ -20,5 +20,5 @@ The App is quite simple. You type on a box and the app reverses the string and p
 
 I used this principle on our app and I could develop the Workers to schedule Upload and Download remote operations with a Fake Http Client. The development was faster and the result robust.
 
-Check it out.
+## Check it out.
 Any questions? Ask Luis Virueña.
