@@ -5,6 +5,7 @@
                 color: red;
             }
             p.code {
+                white-space: nowrap;
                 color: darkgreen;
                 background: lightgray;
                 margin: 0;
@@ -15,6 +16,9 @@
             }
             p.indent2 {
                 text-indent: 2em;
+            }
+            p.indent3 {
+                text-indent: 3em;
             }
         </style>
     </head>
@@ -47,69 +51,67 @@
 
         <h2>The @Test Case</h2>
         <p>If you look at the AndroidTest package, you will find the Test case. Android’s WorkManager provides a Synchronous Executor for tests. The setup method does configure it. This allows the tests to launch a Worker and get the resulting State when the Worker finishes.</p>
-        <p class="code">
-            @RunWith(AndroidJUnit4.class)
-            public class TestReverseTextWorkerForTest {
+        <p class="code">@RunWith(AndroidJUnit4.class)</p>
+        <p class="code">public class TestReverseTextWorkerForTest {</p>
+        <p class="code indent">@Inject</p>
+        <p class="code indent">TextReverserServer reverser;</p>
 
-            @Inject
-            TextReverserServer reverser;
+        <p class="code indent">@Inject</p>
+        <p class="code indent">ReverseTextWorker textWorker;</p>
 
-            @Inject
-            ReverseTextWorker textWorker;
+        <p class="code indent">@Before</p>
+        <p class="code indent">public void setup() {</p>
+        <p class="code indent2">Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();</p>
+        <p class="code indent2">Configuration config = new Configuration.Builder()</p>
+        <p class="code indent3">.setMinimumLoggingLevel(Log.DEBUG)</p>
+        <p class="code indent3">.setExecutor(new SynchronousExecutor())</p>
+        <p class="code indent3">.build();</p>
 
-            @Before
-            public void setup() {
-            Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Configuration config = new Configuration.Builder()
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .setExecutor(new SynchronousExecutor())
-            .build();
+        <p class="code indent2">WorkManagerTestInitHelper.initializeTestWorkManager(context, config);</p>
+        <p class="code indent">}</p>
 
-            WorkManagerTestInitHelper.initializeTestWorkManager(context, config);
-            }
+        <p class="code indent">@Test</p>
+        <p class="code indent">public void testReverseTextWorker() throws Exception {</p>
 
-            @Test
-            public void testReverseTextWorker() throws Exception {
+        <p class="code indent2">Data dataText = new Data.Builder()</p>
+        <p class="code indent2">.putString(MainActivity.INPUT_TEXT, "abcdefghijklmnopqrstuvwxyz")</p>
+        <p class="code indent3">.build();</p>
 
-            Data dataText = new Data.Builder()
-            .putString(MainActivity.INPUT_TEXT, "abcdefghijklmnopqrstuvwxyz")
-            .build();
+        <p class="code indent2">OneTimeWorkRequest reverseTextWorkRequest = new OneTimeWorkRequest.Builder(ReverseTextWorkerForTest.class)</p>
+        <p class="code indent2">.setInputData(dataText)</p>
+        <p class="code indent3">.build();</p>
 
-            OneTimeWorkRequest reverseTextWorkRequest = new OneTimeWorkRequest.Builder(ReverseTextWorkerForTest.class)
-            .setInputData(dataText)
-            .build();
+        <p class="code indent2">WorkManager workManager = WorkManager.getInstance();</p>
 
-            WorkManager workManager = WorkManager.getInstance();
+        <p class="code indent2">workManager.enqueue(reverseTextWorkRequest).getResult().get();</p>
 
-            workManager.enqueue(reverseTextWorkRequest).getResult().get();
+        <p class="code indent2">WorkInfo workInfo = workManager.getWorkInfoById(reverseTextWorkRequest.getId()).get();</p>
+        <p class="code indent2">Data dataOutput = workInfo.getOutputData();</p>
+        <p class="code indent2">String output = dataOutput.getString(MainActivity.OUTPUT_TEXT);</p>
 
-            WorkInfo workInfo = workManager.getWorkInfoById(reverseTextWorkRequest.getId()).get();
-            Data dataOutput = workInfo.getOutputData();
-            String output = dataOutput.getString(MainActivity.OUTPUT_TEXT);
-
-            assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
-            assertThat(output, is("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-            }
-            }
-        </p>
+        <p class="code indent2">assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));</p>
+        <p class="code indent2">assertThat(output, is("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));</p>
+        <p class="code indent2">}</p>
+        <p class="code indent">}</p>
+        
         <p>To test the worker, we inject a Fake server. This fake server implements the same interface that the TextReverserServer, allowing it to use either one.</p>
         <p>The test is performed on a ReverseTextWorkerForTest object, this extends the ReverseTextWorker overriding only the init method. The rest of the logic is untouched and therefore can be tested.</p>
-        <p class="code">
-            public class ReverseTextWorkerForTest extends ReverseTextWorker {
-            public ReverseTextWorkerForTest(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-            super(context, workerParams);
-            }
+        <p class="code"></p>
+        <p class="code">public class ReverseTextWorkerForTest extends ReverseTextWorker {</p>
+        <p class="code">public ReverseTextWorkerForTest(@NonNull Context context, @NonNull WorkerParameters workerParams) {</p>
+        <p class="code indent">super(context, workerParams);</p>
+        <p class="code">}</p>
 
-            @Override
-            public void init() {
-            ReverseTextComponentForTest component =
-            DaggerReverseTextComponentForTest.builder()
-            .reverseTextModuleForTest(new ReverseTextModuleForTest())
-            .build();
-            component.inject(this);
-            }
-            }
-        </p>
+        <p class="code">@Override</p>
+        <p class="code">public void init() {</p>
+        <p class="code indent">ReverseTextComponentForTest component =</p>
+        <p class="code indent2">DaggerReverseTextComponentForTest.builder()</p>
+        <p class="code indent2">.reverseTextModuleForTest(new ReverseTextModuleForTest())</p>
+        <p class="code indent2">.build();</p>
+        <p class="code indent">component.inject(this);</p>
+        <p class="code indent">}</p>
+        <p class="code">}</p>
+        
         <p>For the test, we use a different Component and Module, Those will inject a TextReverserFake instead of a TextReverserServer. Then the test creates a WorkRequeast and schedules the worker, which is executed and asserts the expected results.</p>
         <h2>That's all folks!</h2>
         <p>Any questions? </p>
