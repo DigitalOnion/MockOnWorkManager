@@ -2,6 +2,8 @@ package com.outerspace.mockonworkmanager;
 
 import android.content.Context;
 
+import com.outerspace.mockonworkmanager.backend.TextReverserInterface;
+import com.outerspace.mockonworkmanager.backend.TextReverserServer;
 import com.outerspace.mockonworkmanager.di.DaggerReverseTextComponent;
 import com.outerspace.mockonworkmanager.di.ReverseTextComponent;
 import com.outerspace.mockonworkmanager.di.ReverseTextModule;
@@ -16,7 +18,7 @@ import androidx.work.WorkerParameters;
 public class ReverseTextWorker extends Worker {
 
     @Inject
-    TextReverser reverser; // = TextReverser.getInstance();  // dependency inside a worker
+    TextReverserInterface reverser; // = TextReverserServer.getInstance();  // dependency inside a worker
 
     public ReverseTextWorker(
             @NonNull Context context,

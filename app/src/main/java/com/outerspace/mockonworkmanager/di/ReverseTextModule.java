@@ -1,6 +1,7 @@
 package com.outerspace.mockonworkmanager.di;
 
-import com.outerspace.mockonworkmanager.TextReverser;
+import com.outerspace.mockonworkmanager.backend.TextReverserInterface;
+import com.outerspace.mockonworkmanager.backend.TextReverserServer;
 
 import javax.inject.Singleton;
 
@@ -11,7 +12,7 @@ import dagger.Provides;
 public class ReverseTextModule {
     @Provides
     @Singleton
-    public TextReverser provideTextReverse() {
-        return TextReverser.getInstance();
+    public TextReverserInterface provideTextReverse() {
+        return TextReverserServer.getInstance();
     }
 }

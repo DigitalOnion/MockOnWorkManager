@@ -2,12 +2,15 @@ package com.outerspace.mockonworkmanager;
 
 import android.content.Context;
 
-import com.outerspace.mockonworkmanager.di.DaggerReverseTextComponent;
-import com.outerspace.mockonworkmanager.di.ReverseTextComponent;
-import com.outerspace.mockonworkmanager.di.ReverseTextModule;
-
 import androidx.annotation.NonNull;
 import androidx.work.WorkerParameters;
+
+/**
+ * ReverseTextWorkerForTest
+ *
+ * it extends the ReverseTextWorker to override the init method. By doing so,
+ * we can test the ReverseTextWorker's logic with a Fake Server.
+ */
 
 public class ReverseTextWorkerForTest extends ReverseTextWorker {
     public ReverseTextWorkerForTest(@NonNull Context context, @NonNull WorkerParameters workerParams) {

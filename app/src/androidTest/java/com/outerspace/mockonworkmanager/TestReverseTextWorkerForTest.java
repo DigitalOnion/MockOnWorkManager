@@ -3,6 +3,8 @@ package com.outerspace.mockonworkmanager;
 import android.content.Context;
 import android.util.Log;
 
+import com.outerspace.mockonworkmanager.backend.TextReverserServer;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +34,7 @@ import static org.junit.Assert.assertThat;
 public class TestReverseTextWorkerForTest {
 
     @Inject
-    TextReverser reverser;
+    TextReverserServer reverser;
 
     @Inject
     ReverseTextWorker textWorker;
@@ -69,6 +71,6 @@ public class TestReverseTextWorkerForTest {
         String output = dataOutput.getString(MainActivity.OUTPUT_TEXT);
 
         assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
-        assertThat(output, is("ZYXWVUTSRQPONMLKJIHGFEDCBA"));
+        assertThat(output, is("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
     }
 }

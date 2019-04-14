@@ -1,13 +1,119 @@
 <html>
+    <head>
+        <style>
+            p.reddish {
+                color: red;
+            }
+            p.code {
+                color: darkgreen;
+                background: lightgray;
+                margin: 0;
+                padding: 0;
+            }
+            p.indent {
+                text-indent: 1em;
+            }
+            p.indent2 {
+                text-indent: 2em;
+            }
+        </style>
+    </head>
     <body>
-        <h1>Mock On WorkManager</h1>
+        <h1>MockOnWorkManager</h1>
         <p>This sample app shows how to create a test case for a Worker object injecting a fake dependency.</p>
-        <p>The app is a very simple "Type and Reverse" app. For the purpose of the exercise, it uses a TextReverser to act as a text reverse server.</p>
-        <p>I use a <strong>Worker</strong> to schedule a <strong>WorkManager</strong> task to call the text reverse server, and I inject the TextReverser object into the Worker task.</p>
-        <p>The challenge is to create a test case which will inject a Fake Text Reverse Server.</p>
-        <p>It works, check it out.</p>
-        <p>Any questions?</p>
-        <p>Ask Luis.</p>
+        <h2>Objectives.</h2>
+        <p>The app has two objectives:</p>
+        <ul>
+            <li>Showcase the use of Dagger-2 Dependency Injection on an Android’s WorkManager Worker object.</li>
+            <li>Showcase TDD - Test Driven Development - by creating a Test Case running om a Worker to which we inject a Fake server dependency.</li>
+        </ul>
+        <h2>The App</h2>
+        <p>The app is a simple “Type and Reverse” app. We set a TextWatcher to an EditText object so it calls the reverse text service every time we type a character. The service returns the processed string to be presented on the screen.</p>
+        <p>The Dependency Injection uses the a simple Dagger 2 component and module. The Component injects a TextReverseInterface into a TextReverseWorker. The Module provides an instance of the TextReverseServer class.</p><p>Notice that the TextReverseServer is a singleton, therefore the Module calls getInstance to obtain the instance.</p>
+        <p class="code">@Singleton</p>
+        <p class="code">@Component(modules = ReverseTextModule.class)</p>
+        <p class="code">public interface ReverseTextComponent {</p>
+        <p class="code indent">void inject(ReverseTextWorker worker);</p>
+        <p class="code">}</p>
+        <p></p>
+        <p class="code">@Module</p>
+        <p class="code">public class ReverseTextModule {</p>
+        <p class="code indent">@Provides</p>
+        <p class="code indent">@Singleton</p>
+        <p class="code indent">public TextReverserInterface provideTextReverse() {</p>
+        <p class="code indent2">return TextReverserServer.getInstance();</p>
+        <p class="code indent">}</p>
+        <p class="code">}</p>
+
+        <h2>The @Test Case</h2>
+        <p>If you look at the AndroidTest package, you will find the Test case. Android’s WorkManager provides a Synchronous Executor for tests. The setup method does configure it. This allows the tests to launch a Worker and get the resulting State when the Worker finishes.</p>
+        <p class="code">
+            @RunWith(AndroidJUnit4.class)
+            public class TestReverseTextWorkerForTest {
+
+            @Inject
+            TextReverserServer reverser;
+
+            @Inject
+            ReverseTextWorker textWorker;
+
+            @Before
+            public void setup() {
+            Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+            Configuration config = new Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(new SynchronousExecutor())
+            .build();
+
+            WorkManagerTestInitHelper.initializeTestWorkManager(context, config);
+            }
+
+            @Test
+            public void testReverseTextWorker() throws Exception {
+
+            Data dataText = new Data.Builder()
+            .putString(MainActivity.INPUT_TEXT, "abcdefghijklmnopqrstuvwxyz")
+            .build();
+
+            OneTimeWorkRequest reverseTextWorkRequest = new OneTimeWorkRequest.Builder(ReverseTextWorkerForTest.class)
+            .setInputData(dataText)
+            .build();
+
+            WorkManager workManager = WorkManager.getInstance();
+
+            workManager.enqueue(reverseTextWorkRequest).getResult().get();
+
+            WorkInfo workInfo = workManager.getWorkInfoById(reverseTextWorkRequest.getId()).get();
+            Data dataOutput = workInfo.getOutputData();
+            String output = dataOutput.getString(MainActivity.OUTPUT_TEXT);
+
+            assertThat(workInfo.getState(), is(WorkInfo.State.SUCCEEDED));
+            assertThat(output, is("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            }
+            }
+        </p>
+        <p>To test the worker, we inject a Fake server. This fake server implements the same interface that the TextReverserServer, allowing it to use either one.</p>
+        <p>The test is performed on a ReverseTextWorkerForTest object, this extends the ReverseTextWorker overriding only the init method. The rest of the logic is untouched and therefore can be tested.</p>
+        <p class="code">
+            public class ReverseTextWorkerForTest extends ReverseTextWorker {
+            public ReverseTextWorkerForTest(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+            super(context, workerParams);
+            }
+
+            @Override
+            public void init() {
+            ReverseTextComponentForTest component =
+            DaggerReverseTextComponentForTest.builder()
+            .reverseTextModuleForTest(new ReverseTextModuleForTest())
+            .build();
+            component.inject(this);
+            }
+            }
+        </p>
+        <p>For the test, we use a different Component and Module, Those will inject a TextReverserFake instead of a TextReverserServer. Then the test creates a WorkRequeast and schedules the worker, which is executed and asserts the expected results.</p>
+        <h2>That's all folks!</h2>
+        <p>Any questions? </p>
+        <p class="reddish">Ask Luis Virueña</strong></p>
     </body>
 </html>
 
